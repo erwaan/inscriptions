@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Les Mercredis de la Coloc</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+
+<script type="module">
+  import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, onValue, runTransaction }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyCIy1vNdG_C30XRyvhlFc1EfiPHW8-w7X8",
+    authDomain: "mercredi-coloc.firebaseapp.com",
+    databaseURL: "https://mercredi-coloc-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mercredi-coloc",
+    storageBucket: "mercredi-coloc.firebasestorage.app",
+    messagingSenderId: "683803261350",
+    appId: "1:683803261350:web:9e7aeed0e3e60118dd3767"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+  window._fbDb      = db;
+  window._fbRef     = ref;
+  window._fbOnValue = onValue;
+  window._fbReady   = true;
+  if (window._onFbReady) window._onFbReady();
+</script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:     #fffdf5;
+  --ink:    #1a1008;
+  --red:    #e8341c;
+  --orange: #f4820a;
+  --yellow: #f7c815;
+  --green:  #3aaa35;
+  --teal:   #1b9e8a;
+  --blue:   #2a6fbf;
+  --pink:   #e8186a;
+  --purple: #8b35bf;
+  --pale1:  #fff4d6;
+  --pale2:  #d9f0e8;
+  --pale3:  #fde0d0;
+  --pale4:  #ddeeff;
+  --pale5:  #f0d9ff;
+  --pale6:  #d6f5e0;
+  --pale7:  #fff3d0;
+  --pale8:  #fce4ec;
+  --pale9:  #e8eeff;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Ccircle cx='3' cy='3' r='.8' fill='%23e8d8b0' opacity='.3'/%3E%3C/svg%3E");
+  min-height:100vh;
+  color:var(--ink);
+}
+
+/* FANIONS */
+.bunting-wrap{position:relative;height:52px;overflow:hidden;background:transparent}
+.bunting-svg{position:absolute;top:0;left:0;width:100%;height:52px}
+
+/* HEADER */
+.header{
+  background:var(--ink);
+  padding:0 20px;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.site-title{
+  font-family:'Boogaloo',cursive;font-size:21px;
+  letter-spacing:1.5px;color:var(--yellow);
+  display:flex;align-items:center;gap:8px;
+}
+#user-display{display:none}
+.user-badge{
+  background:var(--yellow);color:var(--ink);
+  border:3px solid var(--yellow);
+  font-family:'Fredoka One',cursive;font-size:14px;
+  padding:5px 16px;border-radius:50px;cursor:pointer;
+  transition:background .15s;
+}
+.user-badge:hover{background:#f0b800}
+
+/* TICKER */
+.ticker{
+  background:var(--red);overflow:hidden;height:30px;
+  display:flex;align-items:center;
+  border-top:2px solid #c0200a;border-bottom:2px solid #c0200a;
+}
+.ticker-track{
+  white-space:nowrap;
+  animation:tick 28s linear infinite;
+  font-family:'Fredoka One',cursive;font-size:14px;
+  letter-spacing:2px;color:#fff;
+}
+@keyframes tick{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+
+/* LOGIN */
+#login-screen{
+  min-height:calc(100vh - 136px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 24px;text-align:center;
+}
+.login-title{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(42px,10vw,88px);
+  line-height:.9;color:var(--ink);
+  letter-spacing:-1px;margin-bottom:24px;
+}
+.login-title .word{
+  display:inline-block;padding:4px 10px 2px;
+  margin:3px 2px;border-radius:6px;color:#fff;
+  transform:rotate(var(--r));
+}
+.w1{background:var(--orange);--r:-2deg}
+.w2{background:var(--teal);--r:1.5deg}
+.w3{background:var(--red);--r:-1deg}
+.w4{background:var(--purple);--r:2deg}
+.w5{background:var(--green);--r:-1.5deg}
+.w6{background:var(--blue);--r:1deg}
+
+.login-sub{font-size:14px;color:#888;letter-spacing:1px;margin-bottom:36px;font-weight:600}
+.login-form{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:300px}
+.login-input{
+  width:100%;padding:14px 20px;font-size:20px;
+  font-family:'Boogaloo',cursive;
+  border:3px solid var(--ink);border-radius:50px;
+  background:#fff;color:var(--ink);outline:none;
+  text-align:center;letter-spacing:1px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.login-input::placeholder{color:#ccc}
+.login-input:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(244,130,10,.15)}
+.btn-primary{
+  background:var(--orange);color:#fff;
+  border:3px solid var(--ink);border-radius:50px;
+  padding:13px 40px;
+  font-family:'Fredoka One',cursive;font-size:18px;
+  letter-spacing:1px;cursor:pointer;
+  box-shadow:4px 4px 0 var(--ink);
+  transition:transform .1s,box-shadow .1s;
+}
+.btn-primary:hover{background:#e07200}
+.btn-primary:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+
+/* PAGE EVENTS */
+#events-page{padding:0 16px 60px;display:none}
+
+/* MOIS */
+.month-header{
+  display:flex;align-items:center;gap:14px;
+  margin:32px 0 18px;padding:0 4px;
+}
+.month-badge{
+  font-family:'Boogaloo',cursive;
+  font-size:clamp(36px,7vw,54px);line-height:1;
+  padding:6px 22px 4px;border-radius:10px;
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);
+  letter-spacing:1px;color:#fff;display:inline-block;
+}
+.badge-juillet{background:var(--orange)}
+.badge-aout   {background:var(--teal)}
+.month-emoji  {font-size:34px}
+
+/* GRILLE */
+.events-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+
+/* CARTE */
+.event-card{
+  background:var(--pale1);
+  border:3px solid var(--ink);border-radius:12px;
+  overflow:hidden;
+  box-shadow:5px 5px 0 var(--ink);
+  display:flex;flex-direction:column;
+  transition:transform .18s,box-shadow .18s;
+  position:relative;
+}
+.event-card:hover{transform:translate(-2px,-3px);box-shadow:8px 8px 0 var(--ink)}
+
+/* scotch déco */
+.event-card::before{
+  content:'';position:absolute;top:-2px;left:50%;
+  transform:translateX(-50%) rotate(-2deg);
+  width:48px;height:14px;
+  background:rgba(247,200,21,.75);
+  border:1.5px solid rgba(0,0,0,.12);border-radius:2px;z-index:2;
+}
+
+/* Bandeau date */
+.card-date-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px 8px;
+}
+.card-date-num{
+  font-family:'Boogaloo',cursive;font-size:46px;
+  line-height:1;color:#fff;
+  text-shadow:2px 2px 0 rgba(0,0,0,.22);
+}
+.card-date-label{
+  font-family:'Fredoka One',cursive;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.92);text-align:right;line-height:1.3;
+}
+.card-emoji-big{
+  font-size:44px;line-height:1;
+  text-align:center;padding:8px 0 4px;display:block;
+}
+
+/* Corps */
+.card-body{padding:0 16px 16px;flex:1;display:flex;flex-direction:column}
+.card-title{
+  font-family:'Boogaloo',cursive;font-size:26px;
+  line-height:1.1;color:var(--ink);margin-bottom:8px;
+}
+.card-desc{
+  font-size:13px;font-weight:600;color:#444;
+  line-height:1.6;flex:1;margin-bottom:14px;
+}
+
+/* Footer */
+.card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;
+  padding-top:10px;
+  border-top:2px dashed rgba(0,0,0,.15);
+}
+.count-pill{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:700;color:#555;
+}
+.count-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--green);border:2px solid var(--ink);flex-shrink:0;
+}
+.count-dot.warn{background:var(--orange)}
+.count-dot.over{background:var(--red)}
+
+/* Boutons inscription */
+.btn-s,.btn-cancel{
+  font-family:'Fredoka One',cursive;font-size:13px;
+  letter-spacing:.5px;padding:7px 16px;
+  border-radius:50px;border:2.5px solid var(--ink);
+  cursor:pointer;
+  box-shadow:3px 3px 0 var(--ink);
+  transition:transform .1s,box-shadow .1s;
+}
+.btn-s{background:var(--green);color:#fff}
+.btn-s:hover{background:#2d8d28}
+.btn-s:active,.btn-cancel:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+.btn-cancel{background:#fff;color:var(--red);border-color:var(--red);box-shadow:3px 3px 0 var(--red)}
+.btn-cancel:hover{background:#fff0f0}
+
+/* Inscrits */
+.attendees-block{
+  margin-top:12px;padding-top:10px;
+  border-top:2px dashed rgba(0,0,0,.12);
+}
+.attendees-label{
+  font-size:10px;font-weight:900;
+  letter-spacing:2px;text-transform:uppercase;
+  color:#aaa;margin-bottom:6px;
+}
+.attendees-tags{display:flex;flex-wrap:wrap;gap:4px}
+.atag{
+  font-size:12px;font-weight:700;padding:2px 10px;
+  border-radius:50px;background:#fff;
+  border:2px solid var(--ink);color:var(--ink);
+}
+.atag.me{background:var(--yellow);border-color:var(--ink)}
+
+/* Fonds cartes */
+.bg-j1{background:var(--pale3)}
+.bg-j2{background:var(--pale2)}
+.bg-j3{background:var(--pale1)}
+.bg-j4{background:var(--pale5)}
+.bg-j5{background:var(--pale8)}
+.bg-a1{background:var(--pale2)}
+.bg-a2{background:var(--pale7)}
+.bg-a3{background:var(--pale8)}
+.bg-a4{background:var(--pale9)}
+
+/* Bandeaux date */
+.datebar-j1{background:var(--red)}
+.datebar-j2{background:var(--green)}
+.datebar-j3{background:var(--blue)}
+.datebar-j4{background:var(--purple)}
+.datebar-j5{background:var(--pink)}
+.datebar-a1{background:var(--teal)}
+.datebar-a2{background:var(--orange)}
+.datebar-a3{background:var(--pink)}
+.datebar-a4{background:var(--blue)}
+
+/* Loading */
+.loading{text-align:center;padding:60px 20px;font-family:'Fredoka One',cursive;font-size:18px;color:#aaa;letter-spacing:2px}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:var(--yellow);
+  font-family:'Fredoka One',cursive;font-size:16px;
+  letter-spacing:1px;padding:12px 28px;
+  border-radius:50px;border:3px solid var(--yellow);
+  z-index:999;pointer-events:none;
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:480px){
+  .site-title{font-size:16px}
+  .events-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- FANIONS -->
+<div class="bunting-wrap">
+<svg class="bunting-svg" viewBox="0 0 800 52" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0,10 Q100,22 200,10 Q300,22 400,10 Q500,22 600,10 Q700,22 800,10" fill="none" stroke="#bbb" stroke-width="1.5"/>
+  <polygon points="20,10 44,10 32,38"   fill="#e8341c"/>
+  <polygon points="60,14 84,14 72,40"   fill="#f7c815"/>
+  <polygon points="100,10 124,10 112,38" fill="#3aaa35"/>
+  <polygon points="140,14 164,14 152,40" fill="#2a6fbf"/>
+  <polygon points="180,10 204,10 192,38" fill="#f4820a"/>
+  <polygon points="220,14 244,14 232,40" fill="#e8186a"/>
+  <polygon points="260,10 284,10 272,38" fill="#8b35bf"/>
+  <polygon points="300,14 324,14 312,40" fill="#1b9e8a"/>
+  <polygon points="340,10 364,10 352,38" fill="#e8341c"/>
+  <polygon points="380,14 404,14 392,40" fill="#f7c815"/>
+  <polygon points="420,10 444,10 432,38" fill="#3aaa35"/>
+  <polygon points="460,14 484,14 472,40" fill="#2a6fbf"/>
+  <polygon points="500,10 524,10 512,38" fill="#f4820a"/>
+  <polygon points="540,14 564,14 552,40" fill="#e8186a"/>
+  <polygon points="580,10 604,10 592,38" fill="#8b35bf"/>
+  <polygon points="620,14 644,14 632,40" fill="#1b9e8a"/>
+  <polygon points="660,10 684,10 672,38" fill="#e8341c"/>
+  <polygon points="700,14 724,14 712,40" fill="#f7c815"/>
+  <polygon points="740,10 764,10 752,38" fill="#3aaa35"/>
+  <polygon points="780,14 804,14 792,40" fill="#2a6fbf"/>
+</svg>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="site-title">🎉 Les Mercredis de la Coloc</div>
+  <div id="user-display">
+    <button class="user-badge" id="user-badge-btn"></button>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    &nbsp;&nbsp;&nbsp;
+    ☀️ JUILLET &amp; AOÛT 2025 ✶ ANIMATIONS ✶ JEUX ✶ BOUFFE ✶ BONNES VIBES ✶ VENEZ NOMBREUX !
+    &nbsp;&nbsp;&nbsp;☀️ JUILLET &amp; AOÛT 2025 ✶ ANIMATIONS ✶ JEUX ✶ BOUFFE ✶ BONNES VIBES ✶ VENEZ NOMBREUX !
+    &nbsp;&nbsp;&nbsp;☀️ JUILLET &amp; AOÛT 2025 ✶ ANIMATIONS ✶ JEUX ✶ BOUFFE ✶ BONNES VIBES ✶ VENEZ NOMBREUX !
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-title">
+    <span class="word w1">Les</span>
+    <span class="word w2">Mercredis</span><br>
+    <span class="word w3">de</span>
+    <span class="word w4">la</span>
+    <span class="word w5">Co</span><span class="word w6">loc</span>
+  </div>
+  <p class="login-sub">✶ Entre ton prénom pour t'inscrire aux soirées ✶</p>
+  <div class="login-form">
+    <input class="login-input" id="prenom-input" type="text" placeholder="Ton prénom…" maxlength="20" autocomplete="off"/>
+    <button class="btn-primary" id="btn-login">C'est parti ! 🎊</button>
+  </div>
+</div>
+
+<!-- PAGE EVENTS -->
+<div id="events-page">
+  <div id="loading" class="loading">Chargement ✨</div>
+  <div id="events-content" style="display:none">
+
+    <div class="month-header">
+      <span class="month-badge badge-juillet">Juillet</span>
+      <span class="month-emoji">☀️</span>
+    </div>
+    <div class="events-grid" id="grid-juillet"></div>
+
+    <div class="month-header">
+      <span class="month-badge badge-aout">Août</span>
+      <span class="month-emoji">🌟</span>
+    </div>
+    <div class="events-grid" id="grid-aout"></div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script type="module">
+const EVENTS = [
+  { id:'j1', month:'juillet', num:'01', weekday:'Mercredi', name:'Court-Métrages & Desserts', emoji:'🎬🍰', bgClass:'bg-j1', dateClass:'datebar-j1', indicMax:20,
+    desc:'Ramène une douceur sucrée et viens la partager devant une compilation de court-métrages soigneusement sélectionnés.' },
+  { id:'j2', month:'juillet', num:'08', weekday:'Mercredi', name:'Doublage', emoji:'🎭🎤', bgClass:'bg-j2', dateClass:'datebar-j2', indicMax:15,
+    desc:"Grand apéro dînatoire : on se relaye en groupe pour doubler une scène en impro ou non. Puis on regarde la compile des résultats." },
+  { id:'j3', month:'juillet', num:'16', weekday:'Jeudi', name:'T.H.I.E.F.', emoji:'🔍🕵️', bgClass:'bg-j3', dateClass:'datebar-j3', indicMax:18,
+    desc:"Un cambrioleur sème la panique en ville. Les meilleurs enquêteurs sont sur le coup. Qui sera le plus malin ? Choisissez votre camp." },
+  { id:'j4', month:'juillet', num:'22', weekday:'Mercredi', name:'Alibi', emoji:'🔫🃏', bgClass:'bg-j4', dateClass:'datebar-j4', indicMax:16,
+    desc:"Accusé d'un crime horrible alors que vous étiez presque innocent. Préparez un alibi en béton et survivez à l'interrogatoire." },
+  { id:'j5', month:'juillet', num:'30', weekday:'Mercredi', name:'Burger Quiz', emoji:'🍔🧠', bgClass:'bg-j5', dateClass:'datebar-j5', indicMax:24,
+    desc:"Sortez ketchup et mayo — ils reviennent 4 ans après pour encore plus de 'Ahou' et de mauvaise foi." },
+  { id:'a1', month:'aout', num:'05', weekday:'Mercredi', name:'T.H.I.E.F.', emoji:'🔍🕵️', bgClass:'bg-a1', dateClass:'datebar-a1', indicMax:18,
+    desc:"Un cambrioleur sème la panique en ville. Les meilleurs enquêteurs sont sur le coup. Qui sera le plus malin ? Choisissez votre camp." },
+  { id:'a2', month:'aout', num:'12', weekday:'Mercredi', name:'Top Chef', emoji:'👨‍🍳⭐', bgClass:'bg-a2', dateClass:'datebar-a2', indicMax:12,
+    desc:"2 équipes. 1 plat, 1 dessert. 1 heure. 2 ingrédients mystères imposés. Une dégustation sans pitié désignera l'étoile méritée." },
+  { id:'a3', month:'aout', num:'19', weekday:'Mercredi', name:'Pyjama 2000', emoji:'🩴📺', bgClass:'bg-a3', dateClass:'datebar-a3', indicMax:20,
+    desc:"Sortez vos plus beaux habits de nuit. Pizza maison, dessins animés des années 2000. Les parents ne sont pas invités." },
+  { id:'a4', month:'aout', num:'26', weekday:'Mercredi', name:'T.H.I.E.F.', emoji:'🔍🕵️', bgClass:'bg-a4', dateClass:'datebar-a4', indicMax:18,
+    desc:"Un cambrioleur sème la panique en ville. Les meilleurs enquêteurs sont sur le coup. Qui sera le plus malin ? Choisissez votre camp." },
+];
+
+const USER_KEY = 'coloc_user_2025';
+let currentUser = localStorage.getItem(USER_KEY) || '';
+let _data = {};
+
+function waitFb(cb){ if(window._fbReady) cb(); else window._onFbReady = cb; }
+
+function subscribeAll(){
+  const { _fbDb:db, _fbRef:fbRef, _fbOnValue:onValue } = window;
+  onValue(fbRef(db,'registrations'), snap => {
+    _data = snap.val() || {};
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('events-content').style.display = 'block';
+    renderEvents();
+  });
+}
+
+async function toggle(eventId, join){
+  const { _fbDb:db, _fbRef:fbRef } = window;
+  const { runTransaction } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");
+  await runTransaction(fbRef(db,`registrations/${eventId}`), cur => {
+    const list = Array.isArray(cur) ? [...cur] : (cur ? Object.values(cur) : []);
+    if(join){ if(!list.includes(currentUser)) list.push(currentUser); }
+    else { const i=list.indexOf(currentUser); if(i>-1) list.splice(i,1); }
+    return list;
+  });
+}
+
+function getList(id){
+  const r = _data[id];
+  if(!r) return [];
+  return Array.isArray(r) ? r : Object.values(r);
+}
+
+function renderEvents(){
+  ['juillet','aout'].forEach(month => {
+    const grid = document.getElementById('grid-'+month);
+    grid.innerHTML = '';
+    EVENTS.filter(e=>e.month===month).forEach(ev => {
+      const list  = getList(ev.id);
+      const count = list.length;
+      const isIn  = list.includes(currentUser);
+      const over  = count >= ev.indicMax;
+      const dotCls= over ? (isIn?'warn':'over') : '';
+
+      const btn = isIn
+        ? `<button class="btn-cancel" data-id="${ev.id}">✕ Annuler</button>`
+        : `<button class="btn-s" data-id="${ev.id}">+ M'inscrire</button>`;
+
+      const tagsHtml = count > 0
+        ? `<div class="attendees-block">
+             <div class="attendees-label">Inscrits · ${count} / ${ev.indicMax}${over?' ⚡ complet':''}</div>
+             <div class="attendees-tags">
+               ${list.map(p=>`<span class="atag${p===currentUser?' me':''}">${p}</span>`).join('')}
+             </div>
+           </div>` : '';
+
+      const card = document.createElement('div');
+      card.className = `event-card ${ev.bgClass}`;
+      card.innerHTML = `
+        <div class="card-date-bar ${ev.dateClass}">
+          <span class="card-date-num">${ev.num}</span>
+          <span class="card-date-label">${ev.weekday}</span>
+        </div>
+        <span class="card-emoji-big">${ev.emoji}</span>
+        <div class="card-body">
+          <div class="card-title">${ev.name}</div>
+          <div class="card-desc">${ev.desc}</div>
+          <div class="card-footer">
+            <div class="count-pill">
+              <div class="count-dot ${dotCls}"></div>
+              ${count} inscrit${count!==1?'s':''} · ${ev.indicMax} prévu${ev.indicMax!==1?'s':''}
+            </div>
+            ${btn}
+          </div>
+          ${tagsHtml}
+        </div>`;
+      grid.appendChild(card);
+    });
+  });
+
+  document.querySelectorAll('.btn-s').forEach(b=>{
+    b.addEventListener('click', async()=>{ b.disabled=true; await toggle(b.dataset.id,true); showToast('Inscription confirmée 🎉'); });
+  });
+  document.querySelectorAll('.btn-cancel').forEach(b=>{
+    b.addEventListener('click', async()=>{ b.disabled=true; await toggle(b.dataset.id,false); showToast('Inscription annulée'); });
+  });
+}
+
+function showLogin(){
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('events-page').style.display='none';
+  document.getElementById('user-display').style.display='none';
+}
+function showEvents(name){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('events-page').style.display='block';
+  document.getElementById('user-display').style.display='block';
+  document.getElementById('user-badge-btn').textContent='👤 '+name;
+  waitFb(()=>subscribeAll());
+}
+function doLogin(){
+  const v = document.getElementById('prenom-input').value.trim();
+  if(!v){ document.getElementById('prenom-input').focus(); return; }
+  currentUser = v.charAt(0).toUpperCase()+v.slice(1);
+  localStorage.setItem(USER_KEY,currentUser);
+  showEvents(currentUser);
+}
+document.getElementById('btn-login').addEventListener('click',doLogin);
+document.getElementById('prenom-input').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+
+let cc=0,ct;
+document.getElementById('user-badge-btn').addEventListener('click',()=>{
+  if(++cc>=3){ clearTimeout(ct);cc=0;localStorage.removeItem(USER_KEY);currentUser='';showLogin(); }
+  clearTimeout(ct); ct=setTimeout(()=>{cc=0},800);
+});
+
+let tt;
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+if(currentUser) showEvents(currentUser); else showLogin();
+</script>
+</body>
+</html>
