@@ -366,14 +366,14 @@ body{
 </div>
 
 <!-- TICKER -->
-<div class="ticker">
+<!-- <div class="ticker">
   <div class="ticker-track">
     &nbsp;&nbsp;&nbsp;
     ☀️ JUILLET &amp; AOÛT 2025 ✶ ANIMATIONS ✶ JEUX ✶ BOUFFE ✶ BONNES VIBES ✶ VENEZ NOMBREUX !
     &nbsp;&nbsp;&nbsp;☀️ JUILLET &amp; AOÛT 2025 ✶ ANIMATIONS ✶ JEUX ✶ BOUFFE ✶ BONNES VIBES ✶ VENEZ NOMBREUX !
     &nbsp;&nbsp;&nbsp;☀️ JUILLET &amp; AOÛT 2025 ✶ ANIMATIONS ✶ JEUX ✶ BOUFFE ✶ BONNES VIBES ✶ VENEZ NOMBREUX !
   </div>
-</div>
+</div> -->
 
 <!-- LOGIN -->
 <div id="login-screen">
@@ -382,9 +382,9 @@ body{
     <span class="word w2">Mercredis</span><br>
     <span class="word w3">de</span>
     <span class="word w4">la</span>
-    <span class="word w5">Co</span><span class="word w6">loc</span>
+    <span class="word w6">Coloc</span>
   </div>
-  <p class="login-sub">✶ Entre ton prénom pour t'inscrire aux soirées ✶</p>
+  <p class="login-sub">✶ Entre ton prénom pour t'inscrire ✶</p>
   <div class="login-form">
     <input class="login-input" id="prenom-input" type="text" placeholder="Ton prénom…" maxlength="20" autocomplete="off"/>
     <button class="btn-primary" id="btn-login">C'est parti ! 🎊</button>
@@ -416,23 +416,23 @@ body{
 
 <script type="module">
 const EVENTS = [
-  { id:'j1', month:'juillet', num:'01', weekday:'Mercredi', name:'Court-Métrages & Desserts', emoji:'🎬🍰', bgClass:'bg-j1', dateClass:'datebar-j1', indicMax:20,
-    desc:'Ramène une douceur sucrée et viens la partager devant une compilation de court-métrages soigneusement sélectionnés.' },
-  { id:'j2', month:'juillet', num:'08', weekday:'Mercredi', name:'Doublage', emoji:'🎭🎤', bgClass:'bg-j2', dateClass:'datebar-j2', indicMax:15,
+  { id:'j1', month:'juillet', num:'01', weekday:'Mercredi', name:'Court-Métrages & Pyjama', emoji:'🎬🍰', bgClass:'bg-j1', dateClass:'datebar-j1', indicMax:10,
+    desc:'Enfile ton plus beau pyjama, ramène une douceur sucrée et viens les partager devant une compilation de court-métrages en tout genre, soigneusement sélectionnés.' },
+  { id:'j2', month:'juillet', num:'08', weekday:'Mercredi', name:'Doublage', emoji:'🎭🎤', bgClass:'bg-j2', dateClass:'datebar-j2', indicMax:10,
     desc:"Grand apéro dînatoire : on se relaye en groupe pour doubler une scène en impro ou non. Puis on regarde la compile des résultats." },
-  { id:'j3', month:'juillet', num:'16', weekday:'Jeudi', name:'T.H.I.E.F.', emoji:'🔍🕵️', bgClass:'bg-j3', dateClass:'datebar-j3', indicMax:18,
+  { id:'j3', month:'juillet', num:'17', weekday:'Vendredi', name:'T.H.I.E.F.', emoji:'🕵️💰', bgClass:'bg-j3', dateClass:'datebar-j3', indicMax:7,
     desc:"Un cambrioleur sème la panique en ville. Les meilleurs enquêteurs sont sur le coup. Qui sera le plus malin ? Choisissez votre camp." },
-  { id:'j4', month:'juillet', num:'22', weekday:'Mercredi', name:'Alibi', emoji:'🔫🃏', bgClass:'bg-j4', dateClass:'datebar-j4', indicMax:16,
+  { id:'j4', month:'juillet', num:'22', weekday:'Mercredi', name:'Alibi', emoji:'👮🚨', bgClass:'bg-j4', dateClass:'datebar-j4', indicMax:6,
     desc:"Accusé d'un crime horrible alors que vous étiez presque innocent. Préparez un alibi en béton et survivez à l'interrogatoire." },
-  { id:'j5', month:'juillet', num:'30', weekday:'Mercredi', name:'Burger Quiz', emoji:'🍔🧠', bgClass:'bg-j5', dateClass:'datebar-j5', indicMax:24,
+  { id:'j5', month:'juillet', num:'30', weekday:'Mercredi', name:'Burger Quiz', emoji:'🍔🧠', bgClass:'bg-j5', dateClass:'datebar-j5', indicMax:6,
     desc:"Sortez ketchup et mayo — ils reviennent 4 ans après pour encore plus de 'Ahou' et de mauvaise foi." },
-  { id:'a1', month:'aout', num:'05', weekday:'Mercredi', name:'T.H.I.E.F.', emoji:'🔍🕵️', bgClass:'bg-a1', dateClass:'datebar-a1', indicMax:18,
+  { id:'a1', month:'aout', num:'05', weekday:'Mercredi', name:'T.H.I.E.F.', emoji:'🕵️💰', bgClass:'bg-a1', dateClass:'datebar-a1', indicMax:7,
     desc:"Un cambrioleur sème la panique en ville. Les meilleurs enquêteurs sont sur le coup. Qui sera le plus malin ? Choisissez votre camp." },
-  { id:'a2', month:'aout', num:'12', weekday:'Mercredi', name:'Top Chef', emoji:'👨‍🍳⭐', bgClass:'bg-a2', dateClass:'datebar-a2', indicMax:12,
+  { id:'a2', month:'aout', num:'12', weekday:'Mercredi', name:'Top Chef', emoji:'👨‍🍳⭐', bgClass:'bg-a2', dateClass:'datebar-a2', indicMax:5,
     desc:"2 équipes. 1 plat, 1 dessert. 1 heure. 2 ingrédients mystères imposés. Une dégustation sans pitié désignera l'étoile méritée." },
-  { id:'a3', month:'aout', num:'19', weekday:'Mercredi', name:'Pyjama 2000', emoji:'🩴📺', bgClass:'bg-a3', dateClass:'datebar-a3', indicMax:20,
-    desc:"Sortez vos plus beaux habits de nuit. Pizza maison, dessins animés des années 2000. Les parents ne sont pas invités." },
-  { id:'a4', month:'aout', num:'26', weekday:'Mercredi', name:'T.H.I.E.F.', emoji:'🔍🕵️', bgClass:'bg-a4', dateClass:'datebar-a4', indicMax:18,
+  { id:'a3', month:'aout', num:'19', weekday:'Mercredi', name:'Diapos', emoji:'🧑‍🏫📺', bgClass:'bg-a3', dateClass:'datebar-a3', indicMax:8,
+    desc:"Toutes ces années d’exposé vont enfin servir. Il est l’heure d’ouvrir PowerPoint et de préparer  ton meilleur diapo. Ta passion du moment, ton métier, ta nouvelle théorie du complot, ... Choisi ton sujet et viens nous le présenter." },
+  { id:'a4', month:'aout', num:'26', weekday:'Mercredi', name:'T.H.I.E.F.', emoji:'🕵️💰', bgClass:'bg-a4', dateClass:'datebar-a4', indicMax:6,
     desc:"Un cambrioleur sème la panique en ville. Les meilleurs enquêteurs sont sur le coup. Qui sera le plus malin ? Choisissez votre camp." },
 ];
 
